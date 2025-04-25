@@ -88,14 +88,18 @@ void disconnectMqtt()
     }
 }
 
-
-
-
-
-
-
 void publishMqtt(char strTopic[], char strData[])
 {
+    // if the topic is to publish a pill, turn the data into something readable for the program recieving it 
+    // the reciever should get data this way strData[0] = number of pills strData[1-...] = seconds till it needs to dispense
+
+    // if the topic is "PillSetupData" then the data should be in the form of "pillName, pillTime, pillAmount"
+    if (strcmp(strTopic, "PillSetupData") == 0)
+    {
+        formatPublishData(strData);
+    }
+
+    // actually publish the data to the topic
     if (getTcpState(0) == TCP_ESTABLISHED)
     {
         uint8_t mqttData[100];
